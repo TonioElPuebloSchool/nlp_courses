@@ -95,3 +95,8 @@ corrected_text = []
 for word in text.split():
     corrected_text.append(spell.correction(word))
 return " ".join(corrected_text)
+
+
+NLP software mainly works at the sentence level and it also expects words to be separated at the minimum level.
+
+Our cleaned text data may contain a group of sentences. and each sentence is a group of words.

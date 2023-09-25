@@ -20,12 +20,10 @@ from utils import emojis_unicode, emoticons, slang_words  # noqa: F401
 
 def preprocessing_pipeline(text: str) -> str:
     """
-    Add a short description of your preprocessing pipeline here
-    (see TP_1 for references)
-    """
-    # Your code here:
-    #
-    raise NotImplementedError
+    This function should chain all the cleaning functions together
+    """ 
+        
+
 
 
 if __name__ == "__main__":
