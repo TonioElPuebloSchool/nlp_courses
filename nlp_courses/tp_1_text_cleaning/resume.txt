@@ -1,0 +1,97 @@
+Lower casing
+.str.lower()
+
+Removal of Punctuations
+translation_table = str.maketrans('', '', PUNCT_TO_REMOVE)
+
+Removal of Stopwords
+filtered_words = [word for word in split if word not in STOPWORDS]
+
+Removal of Frequent words
+most_common = Counter(" ".join(text_df["text_wo_stop"]).split()).most_common()
+filtered_words = [word for word in split if word not in freq_words]
+
+Removal of Rare words
+filtered_words = [word for word in split if word not in rare_words]
+
+TO_REMOVE = list(itertools.chain(*[list(STOPWORDS), list(FREQWORDS), list(RAREWORDS)]))
+filtered_words = [word for word in split if word not in words_to_remove]
+
+Stemming
+stemmer = PorterStemmer()
+Before stemming: programs, after stemming: program
+Before stemming: programming, after stemming: program
+Before stemming: programmed, after stemming: program
+Before stemming: walks, after stemming: walk
+Before stemming: walked, after stemming: walk
+Before stemming: walking, after stemming: walk
+
+Number of unique words without stemming: 813
+Number of unique words with stemming: 664
+Difference: 149 words
+Percentage of vocabulary size reduction: 18.33%
+
+Lemmatization
+lemmatizer = WordNetLemmatizer()
+
+pos_tagged_text = nltk.pos_tag(nltk.word_tokenize(text))
+lemmatized_words = [lemmatizer.lemmatize(word, wordnet_map.get(pos[0], wordnet.NOUN)) for word, pos in pos_tagged_text]
+
+Number of unique words without stemming: 813
+Number of unique words with stemming: 597
+Difference: 216 words out of 93 sample
+Percentage of vocabulary size reduction: 26.57%
+
+Removal of emojis
+https://gist.github.com/slowkow/7a7f61f495e3dbb7e3d767f97bd7304b
+return emoji_pattern.sub(r'', text)
+
+Removal of emoticons
+https://github.com/NeelShah18/emot/blob/master/emot/emo_unicode.py
+emoticon_pattern = re.compile(u'(' + u'|'.join(k for k in EMOTICONS) + u')')
+return emoticon_pattern.sub(r'', text)
+# as said earlier, removing emoticons might not be a good idea depending on the task
+# it could be useful to keep them for sentiment analysis for example
+# also as it's really common to use emoticons in tweets, they are part of the vocabulary and removing them might lose some information
+# it could be interesting to replace them with a word that represents the emoticon for example (just noticed it's the next section)
+
+# I'm also intrigued as how it works for sentences where it's not clear :
+remove_emoticons("As he said (did he) earlier :(I'm sad) and I'm happy :)")
+# gives : "As he said (did he earlier I'm sad and I'm happy "
+
+# seems like ")" are removed but not "("
+remove_emoticons(")))(((")
+
+Conversion of emoticons to words
+for emoticon, description in EMOTICONS.items():
+        text = re.sub(emoticon, "_".join(description.replace(",", "").split()), text)
+return text
+
+Conversion of emojis to words
+https://github.com/NeelShah18/emot/blob/master/emot/emo_unicode.py
+EMO_UNICODE = emojis_unicode()
+for description, emoji in EMO_UNICODE.items():
+        text = text.replace(emoji, "_".join(description.replace(",", "").replace(":", "").split()))
+return text
+
+Removal of URLs
+url_pattern = re.compile(r'https?://\S+|www\.\S+')
+return url_pattern.sub(r'', text)
+
+Removal of HTML tags
+html_pattern = re.compile('<.*?>')
+return html_pattern.sub(r'', text)
+
+return BeautifulSoup(text, "html.parser").text
+
+Chat words conversion
+for word in text.split():
+    new_text.append(slang_words_list.get(word.upper(), word))
+return " ".join(new_text)
+
+Spelling correction
+spell = SpellChecker()
+corrected_text = []
+for word in text.split():
+    corrected_text.append(spell.correction(word))
+return " ".join(corrected_text)
